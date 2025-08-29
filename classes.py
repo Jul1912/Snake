@@ -8,9 +8,8 @@ class Snake:
 
     def take_step(self, position: tuple, remove: bool):
         if remove:
-            self.body = self.body[1:] + [position]
-        else:
-            self.body += [position]
+            self.body.pop(0)
+        self.body.append(position)
 
     def set_direction(self, direction: tuple):
         self.direction = direction
@@ -40,7 +39,8 @@ class Apple:
 
 class Game:
     def __init__(self, height: int, width: int, snake_body: list, snake_direction: tuple):
-        # TODO: height and width must be positive
+        if height <= 0 or width <= 0:
+            raise ValueError("Height and width must be positive")
         self.height = height
         self.width = width
         self.snake = Snake(snake_body, snake_direction)
@@ -48,13 +48,7 @@ class Game:
         self.score = 0
 
     def board_matrix(self) -> list:
-        list = []
-        for _ in range(self.height):
-            inner_list = []
-            for _ in range(self.width):
-                inner_list.append(None)
-            list.append(inner_list)
-        return list
+        return [[None for _ in range(self.width)] for _ in range(self.height)]
 
     def render_box_row(self, len_row: int) -> str:
         rendered_matrix = ""
@@ -63,7 +57,7 @@ class Game:
         rendered_matrix += "+"
         return rendered_matrix
 
-    def update_if_out_of_bounce(self, next_step: tuple) -> tuple:
+    def update_if_out_of_bounds(self, next_step: tuple) -> tuple:
         if next_step[0] == self.height:
             next_step = (0, next_step[1])
         if next_step[0] < 0:
@@ -103,7 +97,7 @@ class Game:
             # Render content
             for field in row:
                 # Empty field
-                if field == None:
+                if field is None:
                     rendered_matrix += " "
                 # Everything else
                 else:

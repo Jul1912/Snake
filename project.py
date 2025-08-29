@@ -1,5 +1,4 @@
-from classes import Apple, Game, Snake
-from time import sleep
+from classes import Game
 
 UP = (-1, 0)
 DOWN = (1, 0)
@@ -24,8 +23,8 @@ while True:
         game.snake.set_direction(VALID_MOVES[direction])
     next_step = game.snake.get_next_step()
 
-    # Check out of bounce
-    next_step = game.update_if_out_of_bounce(next_step)
+# Check out of bounds
+    next_step = game.update_if_out_of_bounds(next_step)
 
     # Check if next_step kills us
     if next_step in game.snake.body[1:]:
